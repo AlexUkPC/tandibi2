@@ -1,0 +1,44 @@
+version: "3"
+services:
+  web_tandibi2:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    ports:
+      - "3013:3000"
+    volumes: 
+      - ./tandibi2:/opt/app
+      - gem_cache_tandibi2:/gems
+    env_file: 
+      - .env/development/database_tandibi2
+      - .env/development/web_tandibi2
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_tandibi2
+  webpack_dev_server_tandibi2:
+    build:
+      context: .
+      args:
+        USER_ID: "${USER_ID:-1000}"
+        GROUP_ID: "${GROUP_ID:-1000}"
+    command: ./bin/webpack-dev-server
+    ports: 
+      - "3048:3048"
+    volumes: 
+      - ./tandibi2:/opt/app
+      - gem_cache_tandibi2:/gems
+    env_file: 
+      - .env/development/database_tandibi2
+      - .env/development/web_tandibi2
+    environment: 
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+  database_tandibi2:
+    image: postgis/postgis
+    env_file: 
+      - .env/development/database_tandibi2
+    volumes: 
+      - db_data_tandibi2:/var/lib/postgresql/data
+volumes: 
+  db_data_tandibi2:
+  gem_cache_tandibi2:

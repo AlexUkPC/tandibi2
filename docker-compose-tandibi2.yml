@@ -1,0 +1,31 @@
+version: "3" 
+services:
+  web_tandibi2:
+    image: alexrogna/tandibi2_web:prod
+    expose:
+      - 3000
+    env_file:
+      - .env/production/database_tandibi2
+      - .env/production/web_tandibi2
+    environment:
+      - VIRTUAL_HOST=tandibi2.alexrogna.com
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=tandibi2.alexrogna.com
+    restart: always
+
+  database_tandibi2:
+    image: postgis/postgis
+    env_file:
+      - .env/production/database_tandibi2
+    volumes:
+      - db_data_tandibi2:/var/lib/postgresql/data
+    restart: always
+    
+  db-migrator_tandibi2:
+    image: alexrogna/tandibi2_web:prod
+    command: ["./wait-for", "--timeout=300", "database_tandibi2:5432", "--", "bin/rails", "db:create" , "db:migrate"]
+    env_file:
+      - .env/production/database_tandibi2
+      - .env/production/web_tandibi2
+volumes:
+  db_data_tandibi2:
