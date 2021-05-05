@@ -11,6 +11,8 @@ services:
       - VIRTUAL_HOST=tandibi2.alexrogna.com
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=tandibi2.alexrogna.com
+    networks:
+      - proxy
     restart: always
 
   database_tandibi2:
@@ -19,6 +21,8 @@ services:
       - .env/production/database_tandibi2
     volumes:
       - db_data_tandibi2:/var/lib/postgresql/data
+    networks:
+      - proxy
     restart: always
     
   db-migrator_tandibi2:
@@ -27,5 +31,9 @@ services:
     env_file:
       - .env/production/database_tandibi2
       - .env/production/web_tandibi2
+    networks:
+      - proxy
 volumes:
   db_data_tandibi2:
+networks:
+  proxy:

@@ -16,6 +16,8 @@ services:
       - .env/development/web_tandibi2
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=webpack_dev_server_tandibi2
+    networks:
+      - network
   webpack_dev_server_tandibi2:
     build:
       context: .
@@ -33,12 +35,18 @@ services:
       - .env/development/web_tandibi2
     environment: 
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    networks:
+      - network
   database_tandibi2:
     image: postgis/postgis
     env_file: 
       - .env/development/database_tandibi2
     volumes: 
       - db_data_tandibi2:/var/lib/postgresql/data
+    networks:
+      - network
 volumes: 
   db_data_tandibi2:
   gem_cache_tandibi2:
+networks:
+  network:
